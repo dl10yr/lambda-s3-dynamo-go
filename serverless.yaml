@@ -1,0 +1,41 @@
+service: lambda-s3-dynamo-go
+frameworkVersion: '2'
+variablesResolutionMode: 20210326
+
+provider:
+  name: aws
+  region: ${opt:region, self:custom.defaultRegion}
+  stage: ${opt:stage, self:custom.defaultStage}
+  runtime: go1.x
+  memorySize: 128
+  lambdaHashingVersion: 20201221
+  deploymentBucket: lambda-s3-dynamo-go
+  iam: 
+    role: ${ssm:/lambda-s3-dynamo-go/${opt:stage, self:custom.defaultStage}/role_arn}
+  environment:
+    DYNAMO_REGION: ${opt:region, self:custom.defaultRegion}
+    DYNAMO_TABLE: lambda-s3-dynamo-go-${opt:stage, self:custom.defaultStage}
+
+custom:
+  defaultStage: dev
+  defaultRegion: 'ap-northeast-1'
+
+package:
+  exclude:
+    - ./**
+  include:
+    - ./dist/**
+  patterns:
+    - '!terraform/**'
+
+functions:
+  import-csv:
+    handler: dist/func1
+    events:
+      - s3:
+          bucket: lambda-s3-dynamo-go-dev-csv-import
+          events:
+            - "s3:ObjectCreated:*"
+          rules:
+            - suffix: .csv
+          existing: false
