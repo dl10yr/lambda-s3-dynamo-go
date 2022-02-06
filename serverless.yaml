@@ -14,7 +14,7 @@ provider:
     role: ${ssm:/lambda-s3-dynamo-go/${opt:stage, self:custom.defaultStage}/role_arn}
   environment:
     DYNAMO_REGION: ${opt:region, self:custom.defaultRegion}
-    DYNAMO_TABLE: lambda-s3-dynamo-go-${opt:stage, self:custom.defaultStage}
+    DYNAMO_TABLE: lambda-s3-dynamo-go-members-${opt:stage, self:custom.defaultStage}
 
 custom:
   defaultStage: dev
@@ -30,7 +30,7 @@ package:
 
 functions:
   import-csv:
-    handler: dist/func1
+    handler: dist/csvimporter
     events:
       - s3:
           bucket: lambda-s3-dynamo-go-dev-csv-import

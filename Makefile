@@ -17,7 +17,7 @@ DEPFILES += $(LIBS:%=%/*$(SUFFIX))
 
 LAMBDA_HANDLER_DIR := handler
 LAMBDA_HANDLERS := \
-	func1
+	csvimporter
 DEPFILES += $(addprefix $(LAMBDA_HANDLER_DIR)/, $(LAMBDA_HANDLERS:%=%/*$(SUFFIX)))
 DIST_DIR := dist
 TARGETS := $(LAMBDA_HANDLERS:%=$(DIST_DIR)/%)
